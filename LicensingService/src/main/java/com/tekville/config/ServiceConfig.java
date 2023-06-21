@@ -14,13 +14,13 @@ import lombok.ToString;
 @Setter
 @ToString
 public class ServiceConfig {
-	@Value("${spring.datasource.uri}")
+	/*@Value("${spring.datasource.uri}")
 	private String url="";
 	@Value("${spring.datasource.username}")
 	private String username="";
 	@Value("${spring.datasource.password}")
 	private String password="";
-	
+	*/
 	
 	
 }

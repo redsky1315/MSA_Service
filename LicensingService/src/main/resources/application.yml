@@ -2,8 +2,8 @@ spring:
   application:
     name: licensing-service
   
-  profiles:
-    active: dev
+  #profiles:
+    #active: dev
   
-  config:
-    import: optional:configserver:http://localhost:8071
+  #config:
+    #import: optional:configserver:http://localhost:8071
