@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.test.conf.Resilience4jCode;
 
-import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -23,15 +23,16 @@ public class Resilience4jService {
 	
 	private void sleep() {
 		try {
-			Thread.sleep(5000);
-			TimeoutException exception = new TimeoutException("고의로 생성");
-			throw exception;
+			Thread.sleep(1000);
+			throw new TimeoutException("고의로 생성");
 		}catch(InterruptedException|TimeoutException e) {
-			e.printStackTrace();
+			log.error(e.getMessage());
 		}
 	}
 	
-	@CircuitBreaker(name=Resilience4jCode.RESSERVICE, fallbackMethod="getFallback")
+	//@CircuitBreaker(name=Resilience4jCode.RESSERVICE, fallbackMethod="getFallback")
+	//@Bulkhead(name=Resilience4jCode.BULKHEADTEST, fallbackMethod="getFallback")
+	@RateLimiter(name=Resilience4jCode.RATELIMITTEST, fallbackMethod="getFallback")
 	public String getResilienceTest() {
 		randomlyRunLong();
 		return "getResilienceTest!";

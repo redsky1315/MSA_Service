@@ -19,7 +19,8 @@ management:
       show-details: always
 
 #resilience4j  
-resilience4j.circuitbreaker:
+resilience4j:
+  circuitbreaker:
     configs:
         default:
             registerHealthIndicator: true
@@ -41,7 +42,36 @@ resilience4j.circuitbreaker:
       myCircuitBreaker:
         base-config: default
         record-failure-predicate: com.test.conf.RecordFailurePred
-resilience4j.ratelimiter:
+  bulkhead:
     configs:
       default:
-        registerHealthIndicator: true
+        max-wait-duration: 10ms
+        max-concurrent-calls: 5
+    instances: 
+      bulkheadService:
+        base-config: default
+  thread-pool-bulkhead:
+    configs:
+      default:
+        maxThreadPoolSize: 1
+        coreThreadPoolSize: 1
+        queueCapacity: 1
+        keepAliveDuration: 20ms
+    instances:
+      bulkheadService:
+        base-config: default
+  retry:
+    instances:
+      retryService:
+        max-attempts: 5
+        wait-duration: 1s
+        retry-exceptions:
+          - java.util.concurrent.TimeoutException
+  ratelimiter:
+    instances:
+      rateLimitService:
+        limit-for-period: 2
+        limit-refresh-period: 1s
+        timeout-duration: 0
+    
+      
