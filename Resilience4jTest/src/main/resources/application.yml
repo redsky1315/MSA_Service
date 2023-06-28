@@ -1,0 +1,47 @@
+server:
+  port: 8087
+  
+#actuator
+management:
+  health:
+    circuitbreakers:
+      enabled: true
+    ratelimiters:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    shutdown:
+      enabled: true
+    health:
+      show-details: always
+
+#resilience4j  
+resilience4j.circuitbreaker:
+    configs:
+        default:
+            registerHealthIndicator: true
+            slidingWindowSize: 5
+            permittedNumberOfCallsInHalfOpenState: 3
+            waitDurationInOpenState: 10s
+            failureRateThreshold: 50
+            eventConsumerBufferSize: 10
+        someShared:
+            slidingWindowSize: 50
+            permittedNumberOfCallsInHalfOpenState: 10
+    instances:
+      circuit-test-70000: # circuitbreaker name
+        baseConfig: default # 기본 config 지정 (Ex-circuitbreaker.configs.{default})
+        slowCallDurationThreshold: 70000 # 응답시간이 느린것으로 판단할 기준 시간 [ms]
+      resService:
+        base-config: default
+        slowCallDurationThreshold: 200
+      myCircuitBreaker:
+        base-config: default
+        record-failure-predicate: com.test.conf.RecordFailurePred
+resilience4j.ratelimiter:
+    configs:
+      default:
+        registerHealthIndicator: true
